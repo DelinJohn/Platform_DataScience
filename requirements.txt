@@ -1,0 +1,7 @@
+flask
+flask-cors
+pymongo
+pandas
+requests
+beautifulsoup4
+werkzeug

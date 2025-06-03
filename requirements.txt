@@ -5,7 +5,3 @@ pandas
 requests
 beautifulsoup4
 werkzeug
-<<<<<<< HEAD
-=======
-yt-dlp
->>>>>>> b3cb2b3 (added llm youtube_url file_uploading)

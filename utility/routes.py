@@ -4,12 +4,9 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 import logging
 from utility.web_Scrapper import crawl_website
 from Databases.mongo import Bot_Retrieval
-<<<<<<< HEAD
-=======
 from On_boarding import chatbot
 from embeddings_creator import embeddings_from_gcb
 from Youtube_extractor import extract_and_store_descriptions
->>>>>>> b3cb2b3 (added llm youtube_url file_uploading)
 
 # app = Flask(__name__)
 # CORS(app)  # Enable CORS if needed
@@ -35,11 +32,7 @@ def scrapper():
         # Convert DataFrame to list of dicts for JSON serialization
         result_json = df.to_dict(orient="records")
 
-<<<<<<< HEAD
         return jsonify({"result": result_json}), 200
-=======
-        return jsonify({"result": result_json,}), 200
->>>>>>> b3cb2b3 (added llm youtube_url file_uploading)
 
     except Exception as e:
         app.logger.error(f"Error scraping URL: {e}", exc_info=True)
@@ -73,8 +66,6 @@ def onboard():
     except Exception as e:
         app.logger.error(f"Error during onboarding data retrieval: {e}", exc_info=True)
         return jsonify({"error": "Internal server error occurred"}), 500
-<<<<<<< HEAD
-=======
 
 
 
@@ -134,4 +125,3 @@ def extract():
         return jsonify({'error': str(e)}), 500
 
 
->>>>>>> b3cb2b3 (added llm youtube_url file_uploading)

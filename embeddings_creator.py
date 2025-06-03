@@ -3,6 +3,7 @@ import os
 from io import BytesIO
 import PyPDF2
 from langchain_experimental.text_splitter import SemanticChunker
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from itertools import chain
 import faiss
@@ -11,6 +12,7 @@ from langchain_community.vectorstores import FAISS
 import getpass
 from fastapi import FastAPI
 import logging
+import json
 
 app = FastAPI()
 
@@ -114,3 +116,80 @@ def embeddings_from_gcb(bucket_name, blob_names):
     except Exception as e:
         logger.error(f"Error in embeddings_from_gcb: {e}")
         return f"An error occurred: {e}"
+
+def embeddings_from_website_content():
+
+
+    # Load JSON file
+    json_file_path = "website_data.json"
+
+    with open(json_file_path, "r", encoding="utf-8") as file:
+        data = json.load(file)
+
+    # Extract relevant text fields
+    documents = []
+    for item in data:
+        text_parts = []
+        if "Title" in item and item["Title"]:
+            text_parts.append(item["Title"])
+        if "Meta Description" in item and item["Meta Description"] != "No description":
+            text_parts.append(item["Meta Description"])
+        if "Headings" in item:
+            for key, values in item["Headings"].item():
+                text_parts.extend(values)
+        if "Paragraphs" in item:
+            text_parts.extend(item["Paragraphs"])
+        
+        # Combine extracted text into a single document
+        combined_text = " ".join(text_parts).strip()
+        if combined_text:
+            documents.append(combined_text)
+
+    # Ensure documents are not empty
+    if not documents:
+        raise ValueError("No relevant text extracted from JSON. Check the JSON structure.")
+
+   
+
+    # Text splitting
+    text_chunks = []
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=20,
+        length_function=len,
+        is_separator_regex=False,
+    )
+
+    for doc in documents:
+        text_chunks.extend(text_splitter.split_text(doc))
+
+    # Ensure text_chunks are not empty
+    if not text_chunks:
+        raise ValueError("No text chunks were created. Check if the extracted text is valid.")
+
+    # Generate embeddings
+    embeddings = OpenAIEmbeddings()
+
+    # Test the embedding model
+    try:
+        test_embedding = embeddings.embed_query("test")
+    except Exception as e:
+        raise RuntimeError(f"Embedding model error: {e}")
+
+    # Convert to FAISS vector database
+    faiss_index_vectors = FAISS.from_texts(text_chunks, embeddings)
+
+    # Save FAISS index locally
+    faiss_index_vectors.save_local("_Website_faiss_index_vectors")
+
+    return "FAISS vector store saved successfully!"
+
+
+
+
+
+
+
+
+   
+    

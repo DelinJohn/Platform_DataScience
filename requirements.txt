@@ -5,3 +5,15 @@ pandas
 requests
 beautifulsoup4
 werkzeug
+yt-dlp
+langchain
+logging
+typing_extensions
+pydantic
+langgraph
+langchain
+langchain-experimental
+langchain_openai
+langchain-core
+google-cloud-storage
+faiss-cpu

@@ -1,1 +1,8 @@
 .env
+<<<<<<< HEAD
+=======
+.json
+documents
+test.ipynb
+
+>>>>>>> b3cb2b3 (added llm youtube_url file_uploading)

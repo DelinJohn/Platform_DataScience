@@ -6,3 +6,5 @@ requests
 beautifulsoup4
 werkzeug
 yt-dlp
+faiss
+langchain
